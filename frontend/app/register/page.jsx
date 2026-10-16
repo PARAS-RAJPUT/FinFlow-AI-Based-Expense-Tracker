@@ -19,28 +19,16 @@ export default function RegisterPage() {
     setError("");
     setLoading(true);
 
-    try {
-      const { data } = await api.post("/auth/register", { name, email, password });
-      if (data.token) {
-        localStorage.setItem("token", data.token);
-        localStorage.setItem(
-          "user",
-          JSON.stringify({ _id: data._id, name: data.name, email: data.email })
-        );
-        router.push("/dashboard");
-      } else {
-        setError("Registration succeeded but no token was returned.");
-      }
-    } catch (err) {
-      console.error("Registration error:", err);
-      const msg =
-        err.response?.data?.message ||
-        err.message ||
-        "Registration failed. Please try again.";
-      setError(msg);
-    } finally {
-      setLoading(false);
-    }
+    // --- MOCK AUTH: bypass backend API ---
+    const mockToken = "mock-token-" + Date.now();
+    localStorage.setItem("token", mockToken);
+    localStorage.setItem(
+      "user",
+      JSON.stringify({ _id: "mock-user-001", name: name || "Demo User", email: email || "demo@example.com" })
+    );
+    setLoading(false);
+    router.push("/dashboard");
+    // --- END MOCK AUTH ---
   };
 
   return (
